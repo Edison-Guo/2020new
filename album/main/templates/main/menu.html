@@ -1,0 +1,38 @@
+{% load static %}
+<div class="topmenu"><span class="topspan">
+{% include 'main/searchForm.html' %}
+</span>
+<span class="topulspan">
+<ul id="menu">
+{% if request.path == "/main/" %}
+	
+	  <li><a href="{% url 'main:main' %}"><img class="logo" src="{% static "main/img/home1.png" %}" alt="Home"></a></li>
+	  <li><a href="{% url 'self:userPage' request.user.id %}"><img class="logo" src="{% static "main/img/self.png" %}" alt="My self"></a></li>
+	  <li><a href="{% url 'self:articleCreate' %}"><img class="logo" src="{% static "main/img/create.png" %}" alt="Create"></a></li>
+	
+{% elif request.path == "/self/userPage/request.user.id" %}
+
+	  <li><a href="{% url 'main:main' %}"><img class="logo" src="{% static "main/img/home.png" %}" alt="Home"></a></li>
+	  <li><a href="{% url 'self:userPage' request.user.id %}"><img class="logo" src="{% static "main/img/self1.png" %}" alt="My self"></a></li>
+	  <li><a href="{% url 'self:articleCreate' %}"><img class="logo" src="{% static "main/img/create.png" %}" alt="Create"></a></li>
+		
+{% elif request.path == "/self/articleCreate/" %}
+  
+    <li><a href="{% url 'main:main' %}"><img class="logo" src="{% static "main/img/home.png" %}" alt="Home"></a></li>
+    <li><a href="{% url 'self:userPage' request.user.id %}"><img class="logo" src="{% static "main/img/self.png" %}" alt="My self"></a></li>
+    <li><a href="{% url 'self:articleCreate' %}"><img class="logo" src="{% static "main/img/create1.png" %}" alt="Create"></a></li>
+  
+{% elif  request.path != '/S'  %}
+  
+    <li><a href="{% url 'main:main' %}"><img class="logo" src="{% static "main/img/home.png" %}" alt="Home"></a></li>
+    <li><a href="{% url 'self:userPage' request.user.id %}"><img class="logo" src="{% static "main/img/self.png" %}" alt="My self"></a></li>
+    <li><a href="{% url 'self:articleCreate' %}"><img class="logo" src="{% static "main/img/create.png" %}" alt="Create"></a></li>
+  
+{% endif %}
+
+{% if user.is_authenticated %}
+<li><a href="{% url 'account:logout' %}">{{ user.username }}</a></li>
+{% endif %}
+</ul>
+</span>
+</div>

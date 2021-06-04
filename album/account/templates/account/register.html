@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8">        
+        <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+        <link rel="stylesheet" href="{% static 'self/css/self.css' %}">
+        
+    </head>
+    <body>   
+        <div class="box">
+          
+          <div class="formdiv">
+              <h2 class="heading">註冊</h2>
+              <br><br>
+              <form   method="post" action="{% url 'account:register' %}" >
+     
+               {% csrf_token %}
+               
+				       <p>帳號&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ userForm.username }} </p>
+				       <br>
+				       <p>密碼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ userForm.password }}</p>
+				       <br>
+				       <p>確認密碼&nbsp;&nbsp;{{ userForm.password2 }}</p>
+				       <br>
+				       <p>名字&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ userForm.fullName }}  </p>
+                <br>
+               <input class="submit" type="submit" value="註冊">
+      
+      
+              </form>
+              
+          </div>
+        </div>
+
+        
+        
+    </body>
+</html>

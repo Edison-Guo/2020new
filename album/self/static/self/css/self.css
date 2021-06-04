@@ -1,0 +1,108 @@
+.submit{
+  display: inline-block;
+  color: white;
+  font-size: 1em;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  border: thin solid gray;
+  background: #00BFFF;
+  border-radius: 10px;
+  font-weight:bold;
+  cursor: pointer;
+  border: None;
+  outline:none;  
+}
+
+.submit:hover {
+  background-color:   #0080ff;
+}
+
+
+#id_username, #id_password, #id_password2, #id_fullName{
+  padding:5px 15px; 
+  border:1.5px black solid;
+  border-color:#00BFFF;
+-webkit-border-radius: 5px;
+border-radius: 5px; 
+background-color: white;
+font-size:1.4em;
+height:1em;
+border-radius:4px;
+}
+
+#id_username:focus{
+  border-style:solid;
+    border:  solid #0080ff;
+    outline:none;
+    } 
+
+#id_password:focus{
+  border-style:solid;
+    border:  solid #0080ff;
+    outline:none;  
+} 
+
+#id_fullName:focus{
+  border-style:solid;
+    border:  solid #0080ff;
+    outline:none;  
+} 
+
+#id_password2:focus{
+  border-style:solid;
+    border:  solid #0080ff;
+    outline:none;  
+} 
+
+#id_username:hover{
+  border-style:solid;
+    border:  solid #0080ff;
+    outline:none;
+    } 
+
+#id_password:hover{
+  border-style:solid;
+    border:  solid #0080ff;
+    outline:none;  
+} 
+
+#id_fullName:hover{
+  border-style:solid;
+    border:  solid #0080ff;
+    outline:none;  
+} 
+
+#id_password2:hover{
+  border-style:solid;
+    border:  solid #0080ff;
+    outline:none;  
+} 
+
+.registerForm{
+	position: absolute;
+  
+  left: 40%;
+  margin: auto;
+  border: thin solid gray;
+  padding: 20px;
+  border-radius: 10px;
+  width: 800px;
+  height:500px;
+  background-color: white;
+}
+
+.nobutton{
+  outline: None;
+}
+
+.commentForm{
+	display: inline-block;
+}
+
+
+
+
+
+#comment{
+	border-radius: 5px;
+}

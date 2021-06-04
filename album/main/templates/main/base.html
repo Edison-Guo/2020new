@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta charset="utf-8">        
+        <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+        {% block css %}{% endblock %}
+    </head>
+    <body>   
+        <div class="page">
+	        {% include 'main/menu.html' %}
+	        <div>
+	            <h2 class="heading">{% block heading %}{% endblock %}</h2>
+	            {% for message in messages %}
+	               <p class="{{ message.tags }}">{{ message }}</p>
+	            {% endfor %}
+	            
+	            {% block content %}{% endblock %}
+	        </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        {% block script %}{% endblock %}
+    </body>
+</html>

@@ -1,0 +1,204 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}{{ article }}{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'self/css/self.css' %}">{% endblock %}
+
+
+
+
+
+{% block content %} 
+
+
+  <br><br><br><br>
+    <div class="box">
+    {% if article.user == user %}
+      <div class="divoption"><img class="logo option " id="logo{{ article.id }}" src="{% static "main/img/option.png" %}" alt="Home"></div>
+    
+      <div class="list" id='logo{{ article.id }}'>
+        <ul>
+          <li class="list_menu">
+           
+           <a href="{% url 'self:articleUpdate' article.id %}"><img class="logo" src="{% static "main/img/write.png" %}" alt="update"></a>
+          </li>         
+          <li class="list_menu">  
+            
+           <form method="post" action="{% url 'self:articleDelete' article.id %}">
+           {% csrf_token %}
+           <input class="logo deleteConfirm"  type="image" img src="{% static 'main/img/delete.png' %}" onClick="document.formname.submit()">
+           
+           </form>
+          
+          </li>
+        </ul>
+      </div>
+    {% endif %}     
+      <a href="{% url 'self:userPage' article.user.id %}">{{ article.user.fullName }}</a>
+      <br><br>
+      <div class="image"><img src="{{ article.picture.url }}" alt="a" ></div>
+      <br>
+      <div class="content">{{ article.content|linebreaks }}</div>
+      <br>
+      <div class=time>{{ article.pubdateTime|date:'Y-m-d H:i' }}</div>
+      <br>
+      <p ><span class="likeshow" id="likecount">{{ total_like_query }}</span>個讚</p>
+      <br>
+      {% if user.is_authenticated %}
+        
+        <span><input type="image" src="{% static "main/img/like.png" %}" class="liketest logo nobutton" id="{{ article.id }}"  value="讚"></span>
+           
+        <form id="{{ article.id }}" class="commentForm" method="post" action="{% url 'self:commentCreate' article.id %}">
+        {% csrf_token %}
+        <input type="text" class="commentinput"id="comment" name="comment" placeholder="留言  ...">
+        <input class="btn" type="submit" value="留言" class='submit'>
+        </form>
+  
+    
+      {% endif %}
+      <div class="allcomment">
+      
+      {% for comment in comments %}
+        <div class="commentDiv commentcontent{{ comment.id }}">
+        
+          <span>{{ comment.user.fullName }}</span>
+          
+          <div class="modify" id="modify{{ comment.id }}">
+            <form class="modifyForm" id="{{ comment.id }}">
+              {% csrf_token %}
+              <input type="text" id="newcomment{{ comment.id }}" value="{{ comment.content }}">
+              <input class="btn" type="submit" value="修改">
+            </form>
+          </div>
+          
+          <span class="comment{{ comment.id }}">{{ comment.content }}</span>
+          {% if comment.user == user %}
+          <span><img class="commentlogo" id="commentlist{{ comment.id }}"  src="{% static "main/img/more.png" %}" alt="Home"></span>
+          
+          <div class="commentlist" id='commentlist{{ comment.id }}'>
+            <ul>
+              <li class="list_menu"><img class="logo commentModify" id="{{ comment.id }}" src="{% static "main/img/write.png" %}" alt="update"></li>
+              
+               
+              <li class="list_menu">
+                
+                <form id="{{ comment.id }}" class="commentDelete" action="{% url 'self:commentDelete' comment.id %}">
+                
+                {% csrf_token %}    
+                      
+                <input class="logo deleteConfirm"  type="image" img src="{% static 'main/img/delete.png' %}" onClick="document.formname.submit()">
+                </form>
+              
+            </ul>
+          </div>
+          {% endif %}
+          <br>
+          
+          <span class="commentTime">{{ comment.pubdateTime|date:'Y-m-d H:i' }}</span>
+          
+        </div>
+        
+               
+      {% endfor %}</div> 
+      
+    </div>
+
+
+{% block script %}<script src="{% static 'main/js/list_deleteConfirm.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+{% endblock %}
+<script>
+$( document ).ready(function(){ 
+  
+  $('.modify').hide();
+  
+  $('.commentForm').submit(function(e) {
+    e.preventDefault();
+    var url ='/self/commentCreate/'+ $(this).attr('id');     
+    var comment = $('#comment').val();
+    $.ajax({
+      type: 'post',
+      url: url,
+      dataType:"json",
+      data: {
+      csrfmiddlewaretoken:'{{ csrf_token }}',
+      comment:comment},
+      success:function(result){
+        
+        $('#comment').val("");
+        
+        var newcomment = "<div class='commentDiv'>"+"<span>"+result.user+"</span>"+" "+"<span class='comment'>"+result.comment+"</span>"+"<br>"+"<span class='commentTime'>"+result.time+" 現在"+"</span>"+"</div>";
+        $('.allcomment').prepend(newcomment);
+      }
+  })    
+  });
+  
+  $('.commentDelete').submit(function(e) {
+    e.preventDefault();
+    var url ='/self/commentDelete/'+ $(this).attr('id');     
+    var commentcontent = ".commentcontent" + $(this).attr('id'); 
+    $.ajax({
+      type: 'post',
+      url: url,
+      dataType:"json",
+      data: {
+      csrfmiddlewaretoken:'{{ csrf_token }}',
+      },
+      success:function(result){
+             
+                
+        $(commentcontent).html(result.delete);
+      }
+  })    
+  });
+  
+  $('.commentModify').on('click', function(e){
+    e.preventDefault();
+    var url ='/self/commentUpdate/'+ $(this).attr('id');  
+    var modify = "#modify" + $(this).attr('id');  
+    var comment = ".comment"+ $(this).attr('id');  
+    $.ajax({
+      type: 'get',
+      url: url,
+      dataType:"json",
+      data: {
+      
+      },
+      success:function(result){
+             
+        $(modify).show();        
+        $('.commentlist').hide();
+        $(comment).hide();
+        $('.commentlogo').hide();
+      }
+  })
+  })
+  
+  $('.modifyForm').submit(function(e) {
+    e.preventDefault();
+    var modify = "#modify" + $(this).attr('id');  
+    var url ='/self/commentUpdate/'+ $(this).attr('id');     
+    var newcomment = "#newcomment"+ $(this).attr('id');     
+    var comment = $(newcomment).val();
+    var commentcontent = ".commentcontent" + $(this).attr('id');   
+    $.ajax({
+      type: 'post',
+      url: url,
+      dataType:"json",
+      data: {
+      csrfmiddlewaretoken:'{{ csrf_token }}',
+      comment:comment},
+      success:function(result){
+        $('.comment').show();
+        $('.commentlogo').show();
+        $(modify).hide();
+        var newcomment = "<div class='commentDiv'>"+"<span>"+result.user+"</span>"+" "+"<span class='comment'>"+result.comment+"</span>"+"<br>"+"<span class='commentTime'>"+"</span>"+"</div>";
+        $(commentcontent).html(newcomment);
+       
+      }
+  })    
+  });
+  
+  
+});
+</script>
+{% endblock %}

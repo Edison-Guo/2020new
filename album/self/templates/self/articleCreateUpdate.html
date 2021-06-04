@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}個人頁面{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'self/css/self.css' %}">{% endblock %}
+
+
+ 
+
+{% block content %} 
+  <br> <br> <br> <br>
+  <div class="box">
+  <h2 class="heading">
+  {% if articleForm.instance.id %}
+          修改文章
+  {% else %}
+          新增文章
+  {% endif %}
+  </h2>
+  <br><br>
+<div class="formdiv">
+  {% if articleForm.instance.id %}
+    <form class="formCreate" class="form"  method="post" action="{% url 'self:articleUpdate' articleForm.instance.id %}" enctype="multipart/form-data">
+  {% else %}
+    <form class="form"  method="post" action="{% url 'self:articleCreate' %}" enctype="multipart/form-data">
+  {% endif %}
+	  
+	  
+		  {% csrf_token %}
+		  
+		  <p>圖片：{{ articleForm.picture }}</p>
+		  <br><br><br>
+		  <p>內容：  {{ articleForm.content }}</p>
+		   <br>
+	    <input class="submit" type="submit" value="完成">
+	    <a class="submit" href="{% url 'self:self' %}">放棄</a>
+	    
+	  </form></div></div>
+{% endblock %}

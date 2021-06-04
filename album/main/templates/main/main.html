@@ -1,0 +1,116 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}首頁{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'self/css/self.css' %}">{% endblock %}
+
+
+
+
+
+{% block content %} 
+
+
+<br><br><br><br>
+  {% for article,comments in articles.items %}
+  
+    <div class="box">
+    {% if article.user == user %}
+      <div class="divoption"><img class="logo option " id="logo{{ article.id }}" src="{% static "main/img/option.png" %}" alt="Home"></div>
+    {% endif %}       
+      <div class="list" id='logo{{ article.id }}'>
+	      <ul>
+	        <li class="list_menu">
+	         
+	         <a href="{% url 'self:articleUpdate' article.id %}"><img class="logo" src="{% static "main/img/write.png" %}" alt="update"> </a>
+	        </li>	        
+	        <li class="list_menu">	        
+	         <form method="post" action="{% url 'self:articleDelete' article.id %}">
+	         {% csrf_token %}
+	         <input class="logo deleteConfirm"  type="image" img src="{% static 'main/img/delete.png' %}" onClick="document.formname.submit()">
+	    
+	         </form>
+	        
+	        </li>
+	      </ul>
+      </div>    
+      <a href="{% url 'self:userPage' article.user.id %}">{{ article.user.fullName }}</a>
+      <br><br>
+      <div class="image"><img src="{{ article.picture.url }}" alt="a" ></div>
+      <br>
+      <div class="context" ><span class="morespan" >{{ article.content|linebreaks|truncatechars_html:30 }}</span>
+      {% if article.content|length > 30 %}
+        <span class="morespan" >...  </span><span class="more" id="{{ article.id }}">更多</span>
+      {% endif %}  
+      </div>
+       <br>
+      <div class=time>{{ article.pubdateTime|date:'Y-m-d H:i' }}</div>
+      <br>
+      <div class="allcomment{{ article.id }}">
+      {% for comment in comments %}
+        <div class="commentDiv">
+          <span><a href="{% url 'self:userPage' comment.user.id %}">{{ comment.user.fullName }}</a></span>
+          <span class="comment">{{ comment.content }}</span>
+          
+          <br>
+          
+          <span class="commentTime">{{ comment.pubdateTime|date:'Y-m-d H:i' }}</span>
+          
+        </div>
+              
+      {% endfor %}
+      </div><br>
+      <a class="href" href="{% url 'self:articleRead' article.id %}">查看全部留言</a>  
+      <br><br>
+      <p><span class="{{ article.id }}" id="likeaccoun"></span>個讚</p>
+      <br>
+      {% if user.is_authenticated %}
+        <input type="image" src="{% static "main/img/like.png" %}" class="likereadtest  logo nobutton" id="{{ article.id }}"  value="讚">
+      {% endif %}
+      {% if user.is_authenticated %}
+        
+        
+           
+        <form id="{{ article.id }}" class="commentForm" method="post" action="{% url 'self:commentCreate' article.id %}">
+        {% csrf_token %}
+        <input type="text" class="commentinput" id="comment{{ article.id }}" name="comment" placeholder="留言  ...">
+        <input class="btn" type="submit" value="留言" class='submit'>
+        </form>
+  
+    
+      {% endif %}
+    </div>
+    
+    <br>
+  {% endfor %}
+  {% block script %}
+  <script src="{% static 'main/js/list_deleteConfirm.js' %}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  {% endblock %}
+  <script>
+  $( document ).ready(function(){ 
+    $('.commentForm').each(function(){
+      $(this).submit(function(e) {
+      e.preventDefault();
+      var url ='/self/commentCreate/'+ $(this).attr('id');     
+      var commentid = "#comment"+ $(this).attr('id'); 
+      var allcomment  = ".allcomment"+ $(this).attr('id'); 
+      var comment = $(commentid).val();
+      $.ajax({
+        type: 'post',
+        url: url,
+        dataType:"json",
+        data: {
+        csrfmiddlewaretoken:'{{ csrf_token }}',
+        comment:comment},
+        success:function(result){          
+          $(commentid).val("");
+          var newcomment = "<div class='commentDiv'>"+"<span>"+result.user+"</span>"+" "+"<span class='comment'>"+result.comment+"</span>"+"<br>"+"<span class='commentTime'>"+result.time+" 現在"+"</span>"+"</div>";
+          $(allcomment).append(newcomment);
+        }
+    })    
+    });
+    });
+    });
+  </script>
+{% endblock %}
+

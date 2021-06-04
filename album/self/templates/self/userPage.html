@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}{{ fullName }}{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'self/css/self.css' %}">{% endblock %}
+{% block heading %}<br><br>{{ fullName }}{% endblock %}
+
+{% block content %}
+追蹤人數
+粉絲人數
+自我介紹
+文章列表
+{% endblock %}

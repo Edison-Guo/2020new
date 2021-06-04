@@ -1,0 +1,5 @@
+{% load static %}
+<form  action="{% url 'main:articleSearch' %}" >
+  <input type="text" name="searchTerm" placeholder="搜尋" >
+  <input class="logo "  type="image" img src="{% static 'main/img/search.png' %}" onClick="document.formname.submit()">
+</form>
